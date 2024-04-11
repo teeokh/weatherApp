@@ -27,8 +27,9 @@ form.addEventListener('submit', async e => {
             .then(response => response.json())
             .then(weatherData => {
                 msg.textContent = "";
-                form.reset();
+                form.reset(); // Clears the form after every search
                 input.focus();
+
                 
                 // Displaying API data on the website
                 const { main, name, sys, weather } = weatherData; // Important information from API
@@ -52,6 +53,38 @@ form.addEventListener('submit', async e => {
                 li.classList.add("city");
                 li.innerHTML = markup;
                 list.appendChild(li);
+
+                // Ensure each city is searched once only
+                const listItems = list.querySelectorAll('.ajax-section .city')
+                const listItemsArray = Array.from(listItems) // Create an array from the list
+
+                if (listItemsArray.length > 0){
+                    
+                    const filteredArray = listItemsArray.filter(el => {
+                        let content = ''
+
+                        // If the input includes a comma, only the first part of the input is kept
+                        if (inputVal.includes(',')){
+                            if(inputVal.split(',')[1].length > 2){
+                                inputVal = inputVal.split(',')[0]
+                                content = el.querySelector('.city-name span').textContent.toLowerCase()
+                            } else {
+                                content = el.querySelector('.city-name').dataset.name.toLowerCase()
+                            }
+                        } else {
+                            content = el.querySelector('.city-name span').textContent.toLowerCase();
+                        } 
+                        return content == inputVal.toLowerCase()
+                    })
+                    if (filteredArray.length > 0){
+                        msg.textContent = `You already know the weather for ${
+                            filteredArray[0].querySelector(".city-name span").textContent
+                          } ...otherwise be more specific by providing the country code as well 😉`;
+                          form.reset();
+                          input.focus();
+                          return;
+                    }
+                }
 
                 console.log(weatherData)
                 return weatherData
