@@ -34,7 +34,6 @@ form.addEventListener('submit', async e => {
                 // Displaying API data on the website
                 const { main, name, sys, weather } = weatherData; // Important information from API
                 const icon = `https://openweathermap.org/img/wn/${weather[0]["icon"]}@2x.png`;
-
                 const li = document.createElement("li");
                 const list = document.querySelector(".cities")
                 const markup = `
@@ -49,10 +48,6 @@ form.addEventListener('submit', async e => {
                         <figcaption>${weather[0]["description"]}</figcaption> 
                         </figure>
                         `;
-
-                li.classList.add("city");
-                li.innerHTML = markup;
-                list.appendChild(li);
 
                 // Ensure each city is searched once only
                 const listItems = list.querySelectorAll('.ajax-section .city')
@@ -85,6 +80,10 @@ form.addEventListener('submit', async e => {
                           return;
                     }
                 }
+
+                li.classList.add("city");
+                li.innerHTML = markup;
+                list.appendChild(li);
 
                 console.log(weatherData)
                 return weatherData
